@@ -47,6 +47,9 @@ on fs
 # Show boot logo as early as possible
     exec /system/bin/show_logo
 
+# Dump RAM console if needed
+    exec /sbin/crashguard
+
 # We chown/chmod /efs because mount is run as root + defaults
     mkdir /efs 0775 radio radio
     mount ubifs /dev/ubi3_0 /efs rw sync
@@ -339,6 +342,7 @@ service dumpstate /system/bin/dumpstate -s
     disabled
     oneshot
 
+<<<<<<< HEAD
 service crashguard /system/bin/crashguard
 
 on property:sys.shutdown.requested=0
@@ -352,6 +356,19 @@ on property:sys.shutdown.requested=1recovery
 
 on property:sys.shutdown.requested=1bootloader
     stop crashguard
+=======
+on property:sys.shutdown.requested=0
+    write /data/.crashguard 1
+
+on property:sys.shutdown.requested=1
+    write /data/.crashguard 1
+
+on property:sys.shutdown.requested=1recovery
+    write /data/.crashguard 1
+
+on property:sys.shutdown.requested=1bootloader
+    write /data/.crashguard 1
+>>>>>>> 0a68978... Add new crashguard service.
 
 service console /bin/sh
     console
